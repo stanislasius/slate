@@ -21,33 +21,38 @@ meta:
     content: Протокол интеграции с Caffesta посредством API
 ---
 
-# Введение
+# Описание протокола взаимодействия с Caffesta
 
-```
-Выберите язык, пример кода для которого хотите увидеть.
+```text
+Выше выберите язык, для которого Вам нужны примеры.
 ```
 
 Данный протокол взаимодействия по API с Caffesta предназначен для получения или передачи данных по разным разделам
 программы.
 
-Весь обмен данными происходит с использованием JSON-объектов.
+Весь обмен данными происходит с использованием **JSON-объектов**.
 
 Кодировка передаваемого текста - **UTF-8**.
 
-### Важно
+<aside class="warning">
+Все объекты, у которых есть <b>ref_code</b> создаются на основе данных из интегрирующейся программы. 
+</aside>
 
-Все объекты, у которых есть `ref_code` создаются на основе данных из интегрирующейся программы. Caffesta будет сначала искать объект с переданным значением в `ref_code`, и если не найдёт совпадений, создаст новый объект.
-Примеры таких объектов: 
-  * Внешний код категории - category_ref_code
-  * Внешний код цеха/отдела - workspace_ref_code
-  * Внешний код товара - product_code 
+Caffesta будет сначала искать объект с переданным значением в `ref_code`, и если не найдёт совпадений, создаст новый
+объект.
 
+Примеры таких объектов:
 
-Также при реализации некоторых возможностей через API могут встречаться объекты (формата `caf_*_id`), которые должны уже быть созданы. Например
-  * caf_*_id - эти объекты должны быть созданы заранее. Это могут быть склады (можно создать вручную в административной части программы) или точки продаж(нужно связаться с поддержкой Caffesta для создания). 
-Пример объектов: caf_storage_id (ID склада), caf_shop_id (ID точки продаж);
+* Внешний код категории - `category_ref_code`;
+* Внешний код цеха/отдела - `workspace_ref_code`;
+* Внешний код товара - `product_code`.
 
+Также при реализации некоторых возможностей через API могут встречаться объекты (формата `caf_*_id`), которые должны уже
+быть созданы. Например:
 
+* `caf_storage_id` - ID склада точки продаж или
+  заведения ([создаётся в административной части программы]("https://caffesta.com/ru/help/41"))
+* `caf_shop_id` - ID точки продаж(нужно связаться с отделом продаж Caffesta).
 
 # Аутентификация
 
@@ -60,7 +65,6 @@ api = Caffesta::APIClient.authorize!('wow_caffesta_api')
 ```
 
 ```python
-
 import requests
 
 url = "https://{account_name}.caffesta.com/a/v1.0/storage/test"
@@ -71,15 +75,18 @@ print(resp)
 ```
 
 Аутентификация происходит путем передачи параметра *X-API-KEY* в заголовке запроса. Проверить прохождение аутентификации
-можно,
-обратившись по тестовому пути `/a/v1.0/storage/test`.
+можно, обратившись по тестовому пути `/a/v1.0/storage/test`.
 
+#### HTTP запрос
+
+`GET https://{account_name}.caffesta.com/a/v1.0/storage/test`
 
 <aside class="notice">
-Обязательно проверьте, заменили ли вы <b>CAFFESTA-X-API-KEY</b> на <u>нужный X-API-KEY</u>, а также и <b>{account_name}</b> на <u>нужное</u> имя аккаунта.
+Обязательно проверьте, заменили ли вы <b>CAFFESTA-X-API-KEY</b> на <u>нужный X-API-KEY</u>, а также и <b>{account_name}</b> 
+в запросе на <u>нужное</u> имя аккаунта.
 </aside>
 
-### Структура ответа
+**Структура ответа**
 
 > 200 Ответ
 
@@ -92,181 +99,257 @@ print(resp)
 }
 ```
 
-| Название | Тип                     | Описание                           |
-|----------|-------------------------|------------------------------------|
-| status   | обязательный<br/>bool   | Булево значение true               |
-| data     | Обязательный<br/>object | Объект, содержащий тестовые данные |
-| id       | обязательный<br/>string | Строка "test"                      |
+| Название | Тип                     | Описание                            |
+|----------|-------------------------|-------------------------------------|
+| status   | Обязательный<br/>bool   | Успешна ли операция                 |
+| data     | Обязательный<br/>object | Объект, содержащий тестовые данные  |
+| id       | Обязательный<br/>string | Строка с тестовыми данными - `test` |
 
-# Kittens
+# Работа со складом
 
-## Get All Kittens
+## Получение списка складов
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+> Пример запроса
 
 ```python
-import kittn
+import requests
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
+url = 'https://{account_name}.caffesta.com/a/v1.0/draft/storages'
+headers = {"X-API-KEY": "CAFFESTA-X-API-KEY"}
+resp = requests.get(url=url, headers=headers)
+
+print(resp)
 ```
 
-```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
+Получение списка складов происходит при обращении по пути `/a/v1.0/draft/storages` при использовании метода **GET**.
+
+#### HTTP запрос
+
+`GET https://{account_name}.caffesta.com/a/v1.0/draft/storages`
+
+> 200 ответ
+
+```json
+{
+  "1": "(id:1) Склад кафе Буран",
+  "2": "(id:2) Общий склад",
+  "3": "(id:3) Резервный склад",
+  "4": "(id:4) Склад магазина К звёздам",
+  "5": "(id:5) Склад бара Берико"
+}
 ```
 
-```javascript
-const kittn = require('kittn');
+Ответом будет JSON-объект:
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+| Название             | Тип                     | Описание                                                  |
+|----------------------|-------------------------|-----------------------------------------------------------|
+| "2"                  | Обязательный<br/>int    | Порядковый номер склада в запросе                         |
+| "(id:2) Общий склад" | Обязательный<br/>string | Строка, содержащая ID товара `(ID)` и наименование склада |
+
+## Получение остатка товаров на складе
+
+> Пример запроса
+
+```python
+import requests
+
+url = 'https://{account_name}.caffesta.com/a/v1.0/draft/store/3'
+headers = {"X-API-KEY": "CAFFESTA-X-API-KEY"}
+resp = requests.get(url=url, headers=headers)
+
+print(resp)
 ```
 
-> The above command returns JSON structured like this:
+Получение остатков происходит при обращении по пути `/a/v1.0/draft/store/{caf_storage_id}` при использовании метода *
+*GET**, где:
+
+* `{caf_storage_id}` - это ID склада точки продаж или заведения в Caffesta.
+
+#### HTTP запрос
+
+`GET https://{account_name}.caffesta.com/a/v1.0/draft/store/{caf_storage_id}`
+
+> 200 ответ
 
 ```json
 [
   {
     "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "name": "Клюквенный морс",
+    "measure": "kg",
+    "cost": "0.000000",
+    "summ": "0",
+    "balance": "-3.000"
+  },
   },
   {
     "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "name": "Вафельный батончик",
+    "measure": "pcs",
+    "cost": "0.245614",
+    "summ": "12.28",
+    "balance": "50"
   }
 ]
+
 ```
 
-This endpoint retrieves all kittens.
+Ответом будет JSON-объект:
 
-#### HTTP Request
+| Название | Тип                     | Описание                       |
+|----------|-------------------------|--------------------------------|
+| id       | Обязательный<br/>int    | ID товара в Caffesta           |
+| name     | Обязательный<br/>string | Название товара                |
+| measure  | Обязательный<br/>string | Единица измерения товара       |
+| cost     | Обязательный<br/>string | Себестоимость товара           |
+| summ     | Обязательный<br/>string | Сумма остатка товара на складе |
+| balance  | Обязательный<br/>string | Количество товара на складе    |
 
-`GET http://example.com/api/kittens`
+# Работа со складскими документами
 
-#### Query Parameters
+## Создание входящей накладной
 
- Parameter    | Default | Description                                                                      
---------------|---------|----------------------------------------------------------------------------------
- include_cats | false   | If set to true, the result will also include cats.                               
- available    | true    | If set to false, the result will include kittens that have already been adopted. 
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-### Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
+> Пример запроса
 
 ```python
-import kittn
+import requests
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
+url = 'https://{account_name}.caffesta.com/a/v1.0/draft/store/3'
+headers = {"X-API-KEY": "CAFFESTA-X-API-KEY"}
+resp = requests.get(url=url, headers=headers)
+
+print(resp)
 ```
 
-```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
-```
+Получение остатков происходит при обращении по пути `/a/v1.0/storage/invoices` с использованием метода **POST** и
+передачей JSON-объекта в теле запроса.
 
-```javascript
-const kittn = require('kittn');
+#### HTTP запрос
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
+`GET https://{account_name}.caffesta.com/a/v1.0/storage/invoices`
 
-> The above command returns JSON structured like this:
+> Тело(body) запроса
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "number": "0155484",
+  "date": "2018-06-13 14:28",
+  "sum": 15520,
+  "comment": "комментарий",
+  "shipper": {
+    "ref_code": "0348741",
+    "name": "поставщик"
+  },
+  "storage": {
+    "caf_id": 1
+  },
+  "items": [
+    {
+      "amount": 25,
+      "package_code": "pcs",
+      "product_code": "prod1",
+      "price": 2,
+      "caf_tax_id": 1,
+      "price_with_tax": 2,
+      "cost": 50,
+      "cost_with_tax": 50
+    }
+  ],
+  "categories": [
+    {
+      "ref_code": "cat1",
+      "name": "category1",
+      "parent": null
+    },
+    {
+      "ref_code": "cat2",
+      "name": "category2",
+      "parent": "cat1"
+    }
+  ],
+  "workspaces": [
+    {
+      "ref_code": "ws111",
+      "name": "Бар"
+    }
+  ],
+  "packages": [
+    {
+      "ref_code": "pcs"
+    },
+    {
+      "ref_code": "l"
+    },
+    {
+      "ref_code": "kg"
+    },
+    {
+      "ref_code": "pack222",
+      "name": "коробка 10 шт",
+      "measure": "pcs",
+      "value": 10
+    }
+  ],
+  "products": [
+    {
+      "ref_code": "prod1",
+      "type": "product",
+      "cancellation_type": 1,
+      "for_sale": true,
+      "name": "1000",
+      "measure": "pcs",
+      "barcode": "2003079000000",
+      "country": "RB",
+      "weight_in_gram": 1000,
+      "caf_tax_id": 1,
+      "category_ref_code": "cat2",
+      "use_discounts": true,
+      "workspace_ref_code": "ws111",
+      "prices": [
+        {
+          "caf_shop_id": 2,
+          "caf_storage_id": 1,
+          "price": 0.475
+        }
+      ]
+    }
+  ]
 }
 ```
 
-This endpoint retrieves a specific kitten.
+Структура передаваемого JSON-объекта:
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+| Название       | Тип                     | Описание                            |
+|----------------|-------------------------|-------------------------------------|
+| number         | Обязательный<br/>string | Номер или имя накладной             |
+| date           | Обязательный<br/>string | Дата проведения накладной **(UTC)** |
+| sum            | Обязательный<br/>int    | Итоговая сумма по накладной         |
+| comment        | Обязательный<br/>string | Комментарий к накладной             |
+| shipper        | Обязательный<br/>object | Данные о поставщике                 |
+| ref_code       | Обязательный<br/>string | Внешний код поставщика              |
+| name           | Обязательный<br/>string | Название поставщика                 |
+| storage        | Обязательный<br/>object | Данные по складу                    |
+| caf_id         | Обязательный<br/>string | ID склада в Caffesta                |
+| items          | Обязательный<br/>string | Количество товара на складе         |
+| amount         | Обязательный<br/>string | Количество товара на складе         |
+| package_code   | Обязательный<br/>string | Количество товара на складе         |
+| product_code   | Обязательный<br/>string | Количество товара на складе         |
+| price          | Обязательный<br/>string | Количество товара на складе         |
+| caf_tax_id     | Обязательный<br/>string | Количество товара на складе         |
+| price_with_tax | Обязательный<br/>string | Количество товара на складе         |
+| cost           | Обязательный<br/>string | Количество товара на складе         |
+| cost_with_tax  | Обязательный<br/>string | Количество товара на складе         |
+| categories     | Обязательный<br/>string | Количество товара на складе         |
+| ref_code       | Обязательный<br/>string | Количество товара на складе         |
+| name           | Обязательный<br/>string | Количество товара на складе         |
+| parent         | Обязательный<br/>string | Количество товара на складе         |
+| workspaces     | Обязательный<br/>string | Количество товара на складе         |
+| ref_code       | Обязательный<br/>string | Количество товара на складе         |
+| name           | Обязательный<br/>string | Количество товара на складе         |
+| packages       | Обязательный<br/>string | Количество товара на складе         |
+| ref_code       | Обязательный<br/>string | Количество товара на складе         |
+| name           | Обязательный<br/>string | Количество товара на складе         |
+| measure        | Обязательный<br/>string | Количество товара на складе         |
+| value          | Обязательный<br/>string | Количество товара на складе         |
 
-#### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-#### URL Parameters
-
- Parameter | Description                      
------------|----------------------------------
- ID        | The ID of the kitten to retrieve 
-
-### Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted": ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-#### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-#### URL Parameters
-
- Parameter | Description                    
------------|--------------------------------
- ID        | The ID of the kitten to delete 
 
