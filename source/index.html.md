@@ -9,8 +9,14 @@ language_tabs: # must be one of https://github.com/rouge-ruby/rouge/wiki/List-of
   - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>-->
 
 includes:
+  - auth
+  - storage
+  - incomes
+  - moves
+  - items
   - delivery
-  - errors
+  - updates
+  - exports
 
 
 search: false
@@ -22,7 +28,7 @@ meta:
   - content: Протокол интеграции с Caffesta посредством API
 ---
 
-# 1. Описание протокола взаимодействия с Caffesta
+# Описание протокола взаимодействия с Caffesta
 
 ```text
 Выше выберите язык, для которого Вам нужны примеры.
