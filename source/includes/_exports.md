@@ -165,36 +165,50 @@ c использованием метода **GET** и передачей вме
 ```json
 [
   {
-    "id": "4f52125c-58ea-touc-0301-650467649790",
+    "id": "0021826c-47bb-0dev-0301-695901418364",
+    "terminal_number": 3,
     "type": "sale",
     "income": 1,
-    "total": 8,
-    "total_sum": 8,
+    "total": 17.5,
+    "total_sum": 17.5,
     "discount_sum": 0,
-    "client": {
-      "id": 2
-    },
-    "created_at": "2022-04-20T18:14:14+03:00",
-    "updated_at": "2022-04-20T18:14:48+03:00",
+    "created_at": "2023-09-28T14:50:27+03:00",
+    "updated_at": "2023-09-28T14:50:38+03:00",
     "bill_dishes": [
       {
-        "count": 2,
-        "price": 4,
-        "self_cost_sum": 0,
-        "total": 8,
+        "id": "cacbeee7-6069-4dc8-a4a0-84612103b779",
+        "count": 0.5,
+        "price": 29,
+        "self_cost_sum": 1.1625,
+        "total": 14.5,
         "discount_sum": 0,
-        "total_sum": 8,
+        "total_sum": 14.5,
         "dish": {
-          "id": 491
+          "id": 8,
+          "ref_code": "8rf"
         }
+      },
+      {
+        "id": "14e096e6-0eae-4cbd-bf68-d1b6bf2371cd",
+        "count": 1,
+        "weight": 1,
+        "price": 2,
+        "self_cost_sum": 0.5,
+        "total": 2,
+        "total_sum": 2,
+        "dish": {
+          "id": 11,
+          "ref_code": "11rf"
+        },
+        "parent_id": "cacbeee7-6069-4dc8-a4a0-84612103b779"
       }
     ],
     "count_clients": 1,
-    "cash_pay": 8,
+    "cash_pay": 17.5,
     "card_pay": 0,
     "back_pay": 0
   }
-]   
+]
 ```
 
 | Название      |  Тип   | Описание                                                   |

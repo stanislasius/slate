@@ -2,16 +2,24 @@
 
 ## 1. Получение списка складов
 
-> Пример запроса
+> Пример простейшего запроса
 
 ```python
 import requests
 
+api_key = "CAFFESTA-X-API-KEY"
+
 url = 'https://{account_name}.caffesta.com/a/v1.0/draft/storages'
-headers = {"X-API-KEY": "CAFFESTA-X-API-KEY"}
+headers = {"X-API_KEY": api_key}
+
 resp = requests.get(url=url, headers=headers)
 
 print(resp)
+```
+
+```shell
+curl "https://{account_name}.caffesta.com/a/v1.0/draft/storages" \
+  -H "X-API-KEY: api_key" 
 ```
 
 Получение списка складов происходит при обращении по пути `/a/v1.0/draft/storages` при использовании метода **GET**.
@@ -20,7 +28,7 @@ print(resp)
 
 `GET https://{account_name}.caffesta.com/a/v1.0/draft/storages`
 
-> 200 ответ
+> Пример ответа на запрос
 
 ```json
 {
@@ -34,23 +42,31 @@ print(resp)
 
 Ответом будет JSON-объект:
 
-| Название             | Тип                     | Описание                                                  |
-|----------------------|-------------------------|-----------------------------------------------------------|
+| Название             | Тип    | Описание                                                  |
+|----------------------|--------|-----------------------------------------------------------|
 | "2"                  | int    | Порядковый номер склада в запросе                         |
 | "(id:2) Общий склад" | string | Строка, содержащая ID товара `(ID)` и наименование склада |
 
 ## 2. Получение остатка товаров на складе
 
-> Пример запроса
+> Пример простейшего запроса
 
 ```python
 import requests
 
-url = 'https://{account_name}.caffesta.com/a/v1.0/draft/store/3'
-headers = {"X-API-KEY": "CAFFESTA-X-API-KEY"}
+api_key = "CAFFESTA-X-API-KEY"
+
+url = 'https://{account_name}.caffesta.com/a/v1.0/draft/store/{caf_storage_id}'
+headers = {"X-API_KEY": api_key}
+
 resp = requests.get(url=url, headers=headers)
 
 print(resp)
+```
+
+```shell
+curl "https://{account_name}.caffesta.com/a/v1.0/draft/store/{caf_storage_id}" \
+  -H "X-API-KEY: {CAFFESTA-X-API-KEY}" 
 ```
 
 Получение остатков происходит при обращении по пути `/a/v1.0/draft/store/{caf_storage_id}` при использовании метода
@@ -62,7 +78,7 @@ print(resp)
 
 `GET https://{account_name}.caffesta.com/a/v1.0/draft/store/{caf_storage_id}`
 
-> 200 ответ
+> Пример ответа на запрос
 
 ```json
 [
@@ -88,8 +104,8 @@ print(resp)
 
 Ответом будет JSON-объект:
 
-| Название | Тип                     | Описание                       |
-|----------|-------------------------|--------------------------------|
+| Название | Тип    | Описание                       |
+|----------|--------|--------------------------------|
 | id       | int    | ID товара в Caffesta           |
 | name     | string | Название товара                |
 | measure  | string | Единица измерения товара       |

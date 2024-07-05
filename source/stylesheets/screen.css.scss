@@ -76,6 +76,8 @@ html, body {
     display: block;
     max-width: 100%;
     margin-bottom: $logo-margin;
+    margin-left: 8px;
+    margin-top: 5px;
   }
 
   &>.search {
@@ -337,7 +339,7 @@ html, body {
   }
 
   &>ul, &>ol {
-    padding-left: $main-padding + 15px;
+    padding-left: $main-padding + 45px;
   }
 
   // the div is the tocify hidden div for placeholding stuff
