@@ -31,7 +31,8 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices" \
 
 `GET https://{account_name}.caffesta.com/a/v1.0/storage/invoices`
 
-Создание документа накладной происходит при обращении по пути `/a/v1.0/storage/invoices` с использованием метода **POST** и
+Создание документа накладной происходит при обращении по пути `/a/v1.0/storage/invoices` с использованием метода **POST
+** и
 передачей JSON-объекта в теле запроса следующей структуры:
 
 > JSON-объект для передачи
@@ -243,7 +244,6 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices/3" \
 |----------|-----|---------------------------------------|
 | action   | str | wire - провести, unwire - распровести |
 
-
 В ответ будет возвращён JSON-объект следующего содержания:
 
 > Ответ на запрос (успешный)
@@ -295,7 +295,6 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices?start=2022-02-
 
 `PUT https://{account_name}.caffesta.com/a/v1.0/storage/invoices?start=2022-02-22`
 
-
 Получение списка накладных происходит при обращении по пути `/a/v1.0/storage/invoices?start={date}` с использованием
 метода **GET**, где:
 
@@ -334,35 +333,41 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices?start=2022-02-
       },
       "status": "not_wired",
       "finished": false,
-      "invoice_date": "2019-03-02T03:00:00+03:00",
+      "doc_date": "2019-03-02T03:00:00+03:00",
       "paid": false
     }
   ]
 }
 ```
 
-| Название | Тип    | Описание                                               |
-|----------|--------|--------------------------------------------------------|
-| success  | bool   | Отображает успешность (`true` либо `false`)            |
-| data     | object | Объект, содержащий дополнительную информацию           |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
-| error    | str    | Возвращаемая ошибка, если обработать запрос не удалось |
+| Название      |  Тип   | Описание                                      |
+|---------------|:------:|-----------------------------------------------|
+| success       |  bool  | Отображает успешность (`true` либо `false`)   |
+| data          | object | Массив со списком накладных                   |
+| id            |  int   | ID накладной в Caffesta                       |
+| name          |  str   | Имя или номер накладной                       |
+| total_amount  | float  | Кол-во товара                                 |
+| total_wo_nds  | float  | Сумма без НДС                                 |
+| total_nds_sum | float  | Сумма НДС                                     |
+| type          |  str   | -                                             |
+| shipper       | object |                                               |
+| id            |  int   | ID поставщика                                 |
+| name          |  str   | Название поставщика                           |                    
+| created_at    |  str   | Дата создания документа                       |                     
+| deleted       |  bool  | Удалён ли                                     |
+| created_at    |  str   | Дата и время создания накладной               |
+| created_by    | object |                                               |
+| id            |  int   | ID пользователя, создавшего накладную         |
+| updated_at    |  str   | Время последнего обновления                   |
+| updated_by    | object |                                               |                                                
+| id            |  int   | ID пользователя, внёсшего последние изменения |
+| storage       | object | Информация о складе                           |                   
+| id            |  int   | ID склада в Каффесте                          |                  
+| name          |  str   | наименование склада                           |                 
+| status        |  str   | wired - проведена, unwired - нет              |             
+| finished      |  str   | wired - проведена, unwired - нет              |             
+| doc_date      |  str   | дата документа                                |            
+| paid          |  bool  | оплачена ли (`true` либо `false`)             |           
 
 ## 4. Получение информации по одной накладной
 
@@ -373,7 +378,6 @@ import requests
 
 api_key = "CAFFESTA-X-API-KEY"
 invoice_id = 123
-
 
 url = f'https://{account_name}.caffesta.com/a/v1.0/storage/invoices/{invoice_id}'
 headers = {"X-API_KEY": api_key}
@@ -395,7 +399,7 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices/123" \
 Получение данных по одной накладной происходит при обращении по пути `/a/v1.0/storage/invoices/{id}` с использованием
 метода **GET**, где:
 
-*  `{id}` - это ID входящей накладной, по которой нужно получить данные.
+* `{id}` - это ID входящей накладной, по которой нужно получить данные.
 
 В ответ будет возвращён JSON-объект следующего содержания:
 
@@ -403,30 +407,35 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices/123" \
 {
   "success": true,
   "data": {
-    "id": 132,
+    "id": 119,
     "type": "incoming",
-    "name": "20231204-1554",
-    "total_amount": 1,
+    "name": "333323",
+    "total_amount": 5,
     "shipper": {
-      "id": 4,
-      "name": "1111"
+      "id": 7,
+      "ref_code": "99999",
+      "name": "ВРозницу",
+      "created_at": "2023-05-24T16:23:52+03:00",
+      "deleted": false
     },
     "items": [
       {
-        "count": 1,
+        "count": 5,
         "price": 2,
-        "cost": 2,
+        "cost": 10,
         "package": {
           "id": 1,
           "ref_code": "pcs",
           "name": "шт",
           "measure": "pcs",
-          "value": 1
+          "value": 1,
+          "deleted": false,
+          "hidden": true
         },
         "product": {
-          "id": 41111,
+          "id": 10116,
           "ref_code": "",
-          "name": "Item 41111",
+          "name": "Item 10116",
           "cancellation_type": "cancel_dish",
           "measure": "pcs",
           "category": {
@@ -436,8 +445,8 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices/123" \
           "work_space": {
             "id": 17
           },
-          "created_at": "2023-08-29T17:38:11+03:00",
-          "updated_at": "2023-09-04T12:34:42+03:00",
+          "created_at": "2023-07-06T14:51:59+03:00",
+          "updated_at": "2023-09-02T22:46:12+03:00",
           "use_discounts": false,
           "type": "simple",
           "code": "",
@@ -449,96 +458,100 @@ curl "https://{account_name}.caffesta.com/a/v1.0/storage/invoices/123" \
           "entity_type": "product"
         },
         "tax": {
-          "id": 1
+          "id": 2
         },
-        "tax_sum": 0,
-        "cost_with_tax": 2
+        "tax_sum": 1,
+        "cost_with_tax": 11
       }
     ],
     "storage": {
       "id": 1,
       "name": "Кафе \"Буран\""
     },
-    "doc_date": "2023-12-02T17:54:00+03:00",
+    "doc_date": "2023-05-25T11:46:00+03:00",
     "paid": false,
-    "status": "wired",
-    "finished": true,
-    "total_wo_nds": 2,
-    "total_nds_sum": 0,
-    "total_cost": 2,
-    "created_at": "2023-12-04T17:54:20+03:00",
+    "status": "not_wired",
+    "finished": false,
+    "total_wo_nds": 10,
+    "total_nds_sum": 1,
+    "total_cost": 11,
+    "created_at": "2023-07-06T14:51:59+03:00",
     "created_by": {
       "id": 1
     },
-    "updated_at": "2023-12-04T17:56:19+03:00",
-    "updated_at": {
+    "updated_at": "2023-07-06T14:51:59+03:00",
+    "updated_by": {
       "id": 1
     }
   }
 }
 ```
 
-
-| Название          | Тип    | Описание                                    |
-|-------------------|--------|---------------------------------------------|
-| success           | bool   | Отображает успешность (`true` либо `false`) |
-| data              | object | Объект, содержащий информацию по накладной  |
-| id                | str    | ID накладной в Caffesta                     |
-| type              | str    | Не используется                             |
-| name              | str    | Имя или номер накладной                     |
-| total_amount      | int    | Итоговое количество товара по накладной     |
-| shipper           | object | Данные по поставщику                        |
-| id                | str    | ID поставщика в Caffesta                    |
-| name              | str    | Имя поставщика                              |
+| Название          |  Тип   | Описание                                    |
+|-------------------|:------:|---------------------------------------------|
+| success           |  bool  | Отображает успешность (`true` либо `false`) |
+| data              | object |                                             |
+| id                |  str   | ID накладной в Caffesta                     |
+| type              |  str   | Не используется                             |
+| name              |  str   | Имя или номер накладной                     |
+| total_amount      | float  | Итоговое количество товара по накладной     |
+| shipper           | object |                                             |
+| id                |  int   | ID поставщика в Caffesta                    |
+| ref_code          |  str   | Внешний код поставщика                      |
+| created_at        |  str   | Дата создания поставщика                    |
+| name              |  str   | Имя поставщика                              |
+| deleted           |  bool  | Удалён ли (`true` либо `false`)             |
 | items             | object | Массив передаваемых товаров                 |
-| count             | str    | Количество товара                           |
-| price             | str    | Цена за 1 единицу измерения                 |
-| cost              | str    | Общая стоимость                             |
+| count             | float  | Количество товара                           |
+| price             | float  | Цена за 1 единицу измерения                 |
+| cost              | float  | Общая стоимость                             |
 | package           | object | Данные о фасовке товара                     |
-| id                | int    | ID фасовки                                  |
-| ref_code          | str    | Внешний код фасовки                         |
-| name              | str    | Наименование фасовки                        |
-| measure           | str    | единица измерения фасовки                   |
-| value             | int    | количество товара в фасовке                 |
+| id                |  int   | ID фасовки                                  |
+| ref_code          |  str   | Внешний код фасовки                         |
+| name              |  str   | Наименование фасовки                        |
+| measure           |  str   | Единица измерения фасовки                   |
+| value             | float  | Количество товара в фасовке                 |
+| deleted           |  bool  | Удалён ли (`true` либо `false`)             |
+| hidden            |  bool  | Отображается ли (`true` либо `false`)       |
 | product           | object |                                             |
-| id                | int    | ID товара                                   |
-| ref_code          | str    | внешний код товара                          |
-| name              | str    | наименование товара                         |
-| cancellation_type | str    | метод списания                              |
-| measure           | str    | единица измерения                           |
-| category          | str    |                                             |
-| id                | int    | ID категории                                |
-| ref_code          | str    | внешний код категории                       |
-| work_space        | str    |                                             |
-| id                | int    | ID цеха                                     |
-| created_at        | str    | время создания товара                       |
-| updated_at        | str    | время последнего обновления                 |
-| use_discounts     | bool   | применяется ли скидка `true/false`          |
-| type              | str    | вид реализации                              |
-| code              | str    |                                             |
-| active            | bool   | активен ли товар   `true/false`             |
-| country           | str    | страна-производитель                        |
-| has_g_m_o         | bool   | содержит ли ГМО   `true/false`              |
-| free_price        | bool   | свободная ли цена  `true/false`             |
-| weight_in_gram    | int    | вес за штуку в граммах                      |
-| entity_type       | str    | тип товара                                  |
-| tax               | str    |                                             |
-| id                | int    | ID налога                                   |
-| tax_sum           | int    | Сумма НДС                                   |
-| cost_with_tax     | int    | Стоимость с НДС                             |
-| storage           | str    |                                             |
-| id                | int    | ID склада                                   |
-| name              | str    | Наименование склада                         |
-| doc_date          | str    | дата документа                              |
-| paid              | bool   | Оплачена ли                                 |
-| status            | str    | Статус проводки `wired/unwired`             |
-| finished          | str    |                                             |
-| total_wo_nds      | int    | сумма без НДС                               |
-| total_nds_sum     | int    | сумма НДС                                   |
-| total_cost        | int    | стоимость с НДС                             |
-| created_at        | str    | время создания накладной                    |
-| created_by        | str    |                                             |
-| id                | int    | ID пользователя, создавшего накладную       |
-| updated_at        | str    | время последнего обновления накладной       |
-| updated_by        | str    |                                             |
-| id                | int    | ID пользователя, обновившего накладную      |
+| id                |  int   | ID товара                                   |
+| ref_code          |  str   | Внешний код товара                          |
+| name              |  str   | Наименование товара                         |
+| cancellation_type |  str   | Метод списания                              |
+| measure           |  str   | Единица измерения                           |
+| category          |  str   |                                             |
+| id                |  int   | ID категории                                |
+| ref_code          |  str   | Внешний код категории                       |
+| work_space        |  str   |                                             |
+| id                |  int   | ID цеха                                     |
+| created_at        |  str   | Время создания товара                       |
+| updated_at        |  str   | Время последнего обновления                 |
+| use_discounts     |  bool  | Применяется ли скидка (`true` либо `false`) |
+| type              |  str   | Вид реализации                              |
+| code              |  str   | -                                           |
+| active            |  bool  | Активен ли товар   (`true` либо `false`) `  |
+| country           |  str   | Страна-производитель                        |
+| has_g_m_o         |  bool  | Содержит ли ГМО   (`true` либо `false`)     |
+| free_price        |  bool  | Свободная ли цена  (`true` либо `false`)    |
+| weight_in_gram    |  int   | Вес за штуку в граммах                      |
+| entity_type       |  str   | Тип товара                                  |
+| tax               |  str   |                                             |
+| id                |  int   | ID налога                                   |
+| tax_sum           | float  | Сумма НДС                                   |
+| cost_with_tax     | float  | Стоимость с НДС                             |
+| storage           |  str   |                                             |
+| id                |  int   | ID склада                                   |
+| name              |  str   | Наименование склада                         |
+| doc_date          |  str   | Дата документа                              |
+| paid              |  bool  | Оплачена ли  (`true` либо `false`)          |
+| status            |  str   | Статус проводки `wired/not_wired`           |
+| finished          |  bool  | -                                           |
+| total_wo_nds      | float  | Сумма без НДС                               |
+| total_nds_sum     | float  | Сумма НДС                                   |
+| total_cost        | float  | Стоимость с НДС                             |
+| created_at        |  str   | Время создания накладной                    |
+| created_by        |  str   |                                             |
+| id                |  int   | ID пользователя, создавшего накладную       |
+| updated_at        |  str   | Время последнего обновления накладной       |
+| updated_by        |  str   |                                             |
+| id                |  int   | ID пользователя, обновившего накладную      |
